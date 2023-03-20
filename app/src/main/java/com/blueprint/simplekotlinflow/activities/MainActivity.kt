@@ -1,4 +1,4 @@
-package com.blueprint.simplekotlinflow
+package com.blueprint.simplekotlinflow.activities
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -10,13 +10,15 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import com.blueprint.simplekotlinflow.R
 import com.blueprint.simplekotlinflow.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
