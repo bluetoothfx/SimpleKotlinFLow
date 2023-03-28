@@ -19,10 +19,10 @@ class AlbumViewModel @Inject constructor(
     var albumResult: StateFlow<ResultWrapper<List<Album>>> = _myFlow.asStateFlow()
 
     var job = viewModelScope.launch {
-        albumResult = albumRepository.getAlbums().stateIn(
+        /*albumResult = albumRepository.getAlbums().stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = ResultWrapper.Loading
-        )
+        )*/
     }
 }

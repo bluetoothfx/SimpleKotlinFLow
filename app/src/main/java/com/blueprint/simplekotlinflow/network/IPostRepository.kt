@@ -6,7 +6,6 @@ import com.blueprint.simplekotlinflow.models.Post
 import kotlinx.coroutines.flow.Flow
 
 interface IPostRepository {
-    suspend fun getPosts(): Flow<ResultWrapper<List<Post>>>
-
-    suspend fun getPost(): Flow<ResultWrapper<Post>>
+    fun getPosts(): Flow<ResultWrapper<List<Post>>>
+    fun getPost(): Flow<ResultWrapper<Post>>
 }

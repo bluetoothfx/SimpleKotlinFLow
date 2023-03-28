@@ -9,28 +9,47 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 
+//suspend fun <T> smartApiCall(
+//    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+//    apiCall: suspend () -> Response<T>
+//): Flow<ResultWrapper<T>> = flow {
+//    emit(ResultWrapper.Loading)
+//    val response = apiCall()
+//    if (response.isSuccessful) {
+//        val data = response.body()
+//        if (data != null) {
+//            emit(ResultWrapper.Success(data))
+//        } else {
+//            val error = response.errorBody()
+//            if (error != null) {
+//                emit(ResultWrapper.Failure(IOException(error.toString())))
+//            } else {
+//                emit(ResultWrapper.Failure(IOException("something went wrong")))
+//            }
+//        }
+//    } else {
+//        emit(ResultWrapper.Failure(Throwable(response.errorBody().toString())))
+//    }
+//}.catch { e ->
+//    e.printStackTrace()
+//    emit(ResultWrapper.Failure(Exception(e)))
+//}.flowOn(dispatcher)
+
+
+
 suspend fun <T> smartApiCall(
-    dispatcher: CoroutineDispatcher = Dispatchers.IO,
     apiCall: suspend () -> Response<T>
-): Flow<ResultWrapper<T>> = flow {
-    emit(ResultWrapper.Loading)
-    val response = apiCall()
-    if (response.isSuccessful) {
-        val data = response.body()
-        if (data != null) {
-            emit(ResultWrapper.Success(data))
-        } else {
-            val error = response.errorBody()
-            if (error != null) {
-                emit(ResultWrapper.Failure(IOException(error.toString())))
-            } else {
-                emit(ResultWrapper.Failure(IOException("something went wrong")))
+): ResultWrapper<T> {
+    try {
+        val response = apiCall()
+        if (response.isSuccessful) {
+            val data = response.body()
+            if (data != null) {
+                return ResultWrapper.Success(data)
             }
         }
-    } else {
-        emit(ResultWrapper.Failure(Throwable(response.errorBody().toString())))
+        return ResultWrapper.Failure(IOException(response.errorBody()?.string() ?: "Unknown error"))
+    } catch (e: Exception) {
+        return ResultWrapper.Failure(e)
     }
-}.catch { e ->
-    e.printStackTrace()
-    emit(ResultWrapper.Failure(Exception(e)))
-}.flowOn(dispatcher)
+}

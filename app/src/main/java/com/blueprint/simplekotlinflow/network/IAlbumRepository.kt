@@ -5,5 +5,5 @@ import com.blueprint.simplekotlinflow.models.Album
 import kotlinx.coroutines.flow.Flow
 
 interface IAlbumRepository {
-    suspend fun getAlbums(): Flow<ResultWrapper<List<Album>>>
+    fun getAlbums(): Flow<ResultWrapper<List<Album>>>
 }

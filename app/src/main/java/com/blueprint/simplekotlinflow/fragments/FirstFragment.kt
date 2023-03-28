@@ -44,15 +44,14 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonFirst.setOnClickListener {
             //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-            getAlbums()
+            getPost()
         }
     }
 
-    private fun getAlbums() {
+    private fun getPost() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mViewModel.getPost()
-                mViewModel.postResult.collect {
+                mViewModel.postFlow.collect {
                     Log.d("resultdata", "onViewCreated: $it")
                 }
             }

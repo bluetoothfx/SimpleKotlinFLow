@@ -17,29 +17,17 @@ class PostViewModel @Inject constructor(
     private val postRepository: PostRepository
 ) : ViewModel() {
 
-    private val _postsFlow = MutableStateFlow<ResultWrapper<List<Post>>>(ResultWrapper.Loading)
-    var postsResult: StateFlow<ResultWrapper<List<Post>>> = _postsFlow.asStateFlow()
+    val postFlow : StateFlow<ResultWrapper<Post>> = postRepository.getPost()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = ResultWrapper.Loading
+        )
 
-    fun getPosts() {
-        viewModelScope.launch {
-            postsResult = postRepository.getPosts().stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = ResultWrapper.Loading
-            )
-        }
-    }
-
-    private val _postFlow = MutableStateFlow<ResultWrapper<Post>>(ResultWrapper.Loading)
-    var postResult: StateFlow<ResultWrapper<Post>> = _postFlow.asStateFlow()
-
-    fun getPost() {
-        viewModelScope.launch {
-            postResult = postRepository.getPost().stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = ResultWrapper.Loading
-            )
-        }
-    }
+    val postsFlow: StateFlow<ResultWrapper<List<Post>>>  = postRepository.getPosts()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = ResultWrapper.Loading
+        )
 }
