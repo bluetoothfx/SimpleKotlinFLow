@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.blueprint.simplekotlinflow.databinding.FragmentFirstBinding
 import com.blueprint.simplekotlinflow.viewmodel.AlbumViewModel
 import com.blueprint.simplekotlinflow.viewmodel.CountdownTimerViewModel
+import com.blueprint.simplekotlinflow.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
-    private val mViewModel: AlbumViewModel by viewModels()
+    private val mViewModel: PostViewModel by viewModels()
     private val tViewModel: CountdownTimerViewModel by viewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -50,7 +51,8 @@ class FirstFragment : Fragment() {
     private fun getAlbums() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mViewModel.albumResult.collect {
+                mViewModel.getPost()
+                mViewModel.postResult.collect {
                     Log.d("resultdata", "onViewCreated: $it")
                 }
             }

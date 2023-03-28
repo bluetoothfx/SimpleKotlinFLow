@@ -16,47 +16,13 @@ class AlbumViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _myFlow = MutableStateFlow<ResultWrapper<List<Album>>>(ResultWrapper.Loading)
-    val albumResult: StateFlow<ResultWrapper<List<Album>>> = _myFlow.asStateFlow()
+    var albumResult: StateFlow<ResultWrapper<List<Album>>> = _myFlow.asStateFlow()
 
-    /*val albumResult =  flow {
-        val data = albumRepository.getAlbums()
-        _myFlow.value = data
-        //emit(data)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = ResultWrapper.Loading
-    )*/
-
-    /*suspend fun collectAlbums() {
-        flow {
-            emit(albumRepository.getAlbums())
-        } .stateIn(
+    var job = viewModelScope.launch {
+        albumResult = albumRepository.getAlbums().stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = ResultWrapper.Loading
-        ).onStart {
-           // _myFlow.value = ResultWrapper.Loading
-        }.catch { e ->
-           // _myFlow.value = ResultWrapper.Failure(e)
-        }.collect {
-            _myFlow.value = it as Flow<ResultWrapper<List<Album>>>
-        }
-        //_myFlow.value = albumRepository.getAlbums()
-    }*/
-    init {
-        collectAlbums()
-    }
-
-    private fun collectAlbums(){
-        viewModelScope.launch {
-            albumRepository.getAlbums().stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = ResultWrapper.Loading
-            ).collect {
-                _myFlow.value = it
-            }
-        }
+        )
     }
 }
